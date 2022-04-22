@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Traits\NfeOrg;
+use App\Models\Unidade;
 use Illuminate\Http\Request;
 
 class TesteController extends Controller
@@ -11,7 +12,11 @@ class TesteController extends Controller
 
     public function teste()
     {
-        $this->emitirDanfePdf();
+//        $this->emitirDanfePdf();
+        $unidade = Unidade::where('codigo_unidade', '110161')
+            ->first();
+
+        $this->consulta($unidade);
     }
 
 }

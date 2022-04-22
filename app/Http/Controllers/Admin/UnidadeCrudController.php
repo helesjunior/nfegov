@@ -3,7 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\UnidadeRequest;
+use App\Http\Traits\CommonColumns;
+use App\Http\Traits\CommonFields;
+use App\Http\Traits\CommonFilters;
+use App\Models\Unidade;
+use App\Repositories\Base;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
@@ -13,56 +23,58 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class UnidadeCrudController extends CrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use ListOperation;
+    use CreateOperation { store as traitStore; }
+    use UpdateOperation { update as traitUpdate; }
+    use DeleteOperation;
+    use ShowOperation;
+    use CommonColumns;
+    use CommonFields;
+    use CommonFilters;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Unidade::class);
+        CRUD::setModel(Unidade::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/unidade');
         CRUD::setEntityNameStrings('unidade', 'unidades');
     }
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
     protected function setupListOperation()
     {
-        CRUD::column('id');
-        CRUD::column('codigo_unidade');
-        CRUD::column('cnpj');
-        CRUD::column('ie');
-        CRUD::column('nome_resumido');
-        CRUD::column('nome');
-        CRUD::column('estado_id');
-        CRUD::column('municipio_id');
-        CRUD::column('certificado_path');
-        CRUD::column('certificado_pass');
-        CRUD::column('created_at');
-        CRUD::column('updated_at');
-        CRUD::column('deleted_at');
+        $this->setupShowOperation();
 
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
+        $this->crud->enableExportButtons();
+    }
+
+    protected function setupShowOperation()
+    {
+        $this->crud->set('show.setFromDb', false);
+
+        $this->addColumnCodigoUnidade();
+        $this->addColumnCnpj();
+        $this->addColumnIe();
+        $this->addColumnNomeResumido();
+        $this->addColumnNome();
+        $this->addColumnEstado();
+        $this->addColumnMunicipio();
+        $this->addColumnCreatedAt();
+        $this->addColumnUpdatedAt();
     }
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -70,30 +82,21 @@ class UnidadeCrudController extends CrudController
     {
         CRUD::setValidation(UnidadeRequest::class);
 
-        CRUD::field('id');
-        CRUD::field('codigo_unidade');
-        CRUD::field('cnpj');
-        CRUD::field('ie');
-        CRUD::field('nome_resumido');
-        CRUD::field('nome');
-        CRUD::field('estado_id');
-        CRUD::field('municipio_id');
-        CRUD::field('certificado_path');
-        CRUD::field('certificado_pass');
-        CRUD::field('created_at');
-        CRUD::field('updated_at');
-        CRUD::field('deleted_at');
+        $this->addFieldCodigoUnidadeNumber();
+        $this->addFieldCnpj();
+        $this->addFieldIe();
+        $this->addFieldNomeResumidoText(null,true);
+        $this->addFieldNomeText(null,true);
+        $this->addFieldEstadoCombo();
+        $this->addFieldMunicipioCombo();
+        $this->addFieldCertificadoPathUpload();
+        $this->addFieldCertificadoPassPassword();
 
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
-         */
     }
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
@@ -101,4 +104,27 @@ class UnidadeCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
+    public function store()
+    {
+        $base = new Base();
+        $enc = $base->encryptPass($this->crud->getRequest()->request->get('certificado_pass'));
+        $this->crud->getRequest()->request->set('certificado_pass',$enc);
+
+        $response = $this->traitStore();
+
+        return $response;
+    }
+
+    public function update()
+    {
+        $base = new Base();
+        $enc = $base->encryptPass($this->crud->getRequest()->request->get('certificado_pass'));
+        $this->crud->getRequest()->request->set('certificado_pass',$enc);
+
+        $response = $this->traitUpdate();
+
+        return $response;
+    }
+
 }

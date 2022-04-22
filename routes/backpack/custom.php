@@ -17,6 +17,24 @@ Route::group([
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
 
+    Route::group([
+        'prefix' => 'api',
+        'namespace'  => 'Api',
+    ], function () {
+        //API Routes
+//        Route::get('municipios', 'MunicipioController@index');
+    });
+
+    Route::group([
+        'prefix' => 'fetch',
+        'namespace'  => 'Fetch',
+    ], function () {
+        //API Routes
+        Route::post('municipios', 'FetchsController@fetchMunicipio');
+    });
+
+
+
     Route::crud('codigo', 'CodigoCrudController');
     Route::crud('codigo-item', 'CodigoItemCrudController');
     Route::crud('estado', 'EstadoCrudController');

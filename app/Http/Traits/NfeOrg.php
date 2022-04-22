@@ -2,6 +2,8 @@
 
 namespace App\Http\Traits;
 
+use App\Models\Unidade;
+use App\Repositories\Base;
 use NFePHP\Common\Certificate;
 use NFePHP\DA\NFe\Danfe;
 use NFePHP\NFe\Tools;
@@ -53,25 +55,27 @@ trait NfeOrg
 
     }
 
-    protected function consulta()
+    protected function consulta(Unidade $unidade)
     {
+        $base = new Base();
+
         $config = [
             "atualizacao" => date('Y-m-d H:i:s'),
             "tpAmb" => 1,
-            "razaosocial" => env('RAZAOSOCIAL'),
-            "cnpj" => env('CNPJ'),
-            "ie" => env('IE'),
-            "siglaUF" => env('SIGLAUF'),
+            "razaosocial" => $unidade->nome,
+            "cnpj" => $unidade->cnpj,
+            "ie" => $unidade->ie,
+            "siglaUF" => $unidade->estado->sigla,
             "schemes" => "PL_009_V4",
             "versao" => '4.00'
         ];
 
         try {
-            $content = file_get_contents(env('CERTIFICADO_DEV'));
+            $content = file_get_contents(env('APP_PATH').env('APP_PATH_CERT').$unidade->certificado_path);
 
             $certificate = Certificate::readPfx(
                 $content,
-                env('CERTIFICADO_PASS')
+                $base->decryptPass($unidade->certificado_pass)
             );
 
             $tools = new Tools(json_encode($config), $certificate);
@@ -95,7 +99,7 @@ trait NfeOrg
 //a quantidade de documentos, e para não baixar várias vezes as mesmas coisas.
             $ultNSU = 0;
             $maxNSU = $ultNSU;
-            $loopLimit = 50; //mantenha o numero de consultas abaixo de 20, cada consulta retorna até 50 documentos por vez
+            $loopLimit = 20; //mantenha o numero de consultas abaixo de 20, cada consulta retorna até 50 documentos por vez
             $iCount = 0;
 
 //executa a busca de DFe em loop
