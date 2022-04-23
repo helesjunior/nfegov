@@ -1,12 +1,12 @@
 @if (config('backpack.base.scripts') && count(config('backpack.base.scripts')))
     @foreach (config('backpack.base.scripts') as $path)
-    <script type="text/javascript" src="{{ asset($path).'?v='.config('backpack.base.cachebusting_string') }}"></script>
+        <script type="text/javascript" src="{{ asset($path).'?v='.config('backpack.base.cachebusting_string') }}"></script>
     @endforeach
 @endif
 
 @if (config('backpack.base.mix_scripts') && count(config('backpack.base.mix_scripts')))
     @foreach (config('backpack.base.mix_scripts') as $path => $manifest)
-    <script type="text/javascript" src="{{ mix($path, $manifest) }}"></script>
+        <script type="text/javascript" src="{{ mix($path, $manifest) }}"></script>
     @endforeach
 @endif
 
@@ -19,12 +19,12 @@
 
     // polyfill for `startsWith` from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
     if (!String.prototype.startsWith) {
-    Object.defineProperty(String.prototype, 'startsWith', {
-        value: function(search, rawPos) {
-            var pos = rawPos > 0 ? rawPos|0 : 0;
-            return this.substring(pos, pos + search.length) === search;
-        }
-    });
+        Object.defineProperty(String.prototype, 'startsWith', {
+            value: function(search, rawPos) {
+                var pos = rawPos > 0 ? rawPos|0 : 0;
+                return this.substring(pos, pos + search.length) === search;
+            }
+        });
     }
 
 
@@ -44,7 +44,7 @@
                 i = ownProps.length,
                 resArray = new Array(i); // preallocate the Array
             while (i--)
-            resArray[i] = [ownProps[i], obj[ownProps[i]]];
+                resArray[i] = [ownProps[i], obj[ownProps[i]]];
             return resArray;
         };
     }
@@ -62,9 +62,8 @@
     $('.nav-tabs a').on('shown.bs.tab', function (e) {
         location.hash = e.target.hash.replace("#tab_", "#");
     });
-</script>
 
-<script type="text/javascript">
+
     function maiuscula(z){
         v = z.value.toUpperCase();
         z.value = v;
@@ -99,25 +98,5 @@
         $(element).mask("99999/9999");
     }
 
-    $(document).ready(function() {
-        $('.mostraCamposRelacionados').each(function(i) {
-            campo = $(this).data('campo');
-            dado = retornaDadosContrato(campo);
 
-            $(this).val(dado);
-        });
-    });
-
-    function retornaDadosContrato(campo) {
-        dado = '';
-
-        if($("#dados_contrato").length) {
-            conteudo = $("#dados_contrato").val();
-            dados = jQuery.parseJSON(conteudo);
-
-            dado = dados[campo];
-        }
-
-        return dado;
-    }
 </script>
