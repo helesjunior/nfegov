@@ -42,14 +42,14 @@ return [
 
     // CSS files that are loaded in all pages, using Laravel's asset() helper
     'styles' => [
-//        'packages/backpack/base/css/bundle.css', // has primary color electric purple (backpack default)
+        'packages/backpack/base/css/bundle.css', // has primary color electric purple (backpack default)
          'packages/backpack/base/css/blue-bundle.css', // has primary color blue
 //        'assets/css/backpack_blue_overlay.css',
 
         // Here's what's inside the bundle:
         // 'packages/@digitallyhappy/backstrap/css/style.min.css',
         // 'packages/animate.css/animate.min.css',
-        // 'packages/noty/noty.css',
+//         'packages/noty/noty.css',
 
         // Load the fonts separately (so that you can replace them at will):
         'packages/source-sans-pro/source-sans-pro.css',
@@ -108,7 +108,7 @@ return [
     // change background color with bg-dark, bg-primary, bg-secondary, bg-danger, bg-warning, bg-success, bg-info, bg-blue, bg-light-blue, bg-indigo, bg-purple, bg-pink, bg-red, bg-orange, bg-yellow, bg-green, bg-teal, bg-cyan, bg-white
 
     // Developer or company name. Shown in footer.
-    'developer_name' => 'Heles Júnior',
+    'developer_name' => 'NfeGov',
 
     // Developer website. Link in footer. Type false if you want to hide it.
     'developer_link' => 'https://github.com/helesjunior/nfegov',
@@ -126,13 +126,13 @@ return [
         'packages/backpack/base/js/bundle.js',
 
         // examples (everything inside the bundle, loaded from CDN)
-        // 'https://code.jquery.com/jquery-3.4.1.min.js',
-        // 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js',
-        // 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js',
-        // 'https://unpkg.com/@coreui/coreui/dist/js/coreui.min.js',
-        // 'https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
-        // 'https://unpkg.com/sweetalert/dist/sweetalert.min.js',
-        // 'https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js'
+//         'https://code.jquery.com/jquery-3.4.1.min.js',
+//         'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js',
+//         'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js',
+//         'https://unpkg.com/@coreui/coreui/dist/js/coreui.min.js',
+//         'https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+//         'https://unpkg.com/sweetalert/dist/sweetalert.min.js',
+//         'https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js'
 
         // examples (VueJS or React)
         // 'https://unpkg.com/vue@2.4.4/dist/vue.min.js',
@@ -142,7 +142,7 @@ return [
 
     // JS files that are loaded in all pages, using Laravel's mix() helper
     'mix_scripts' => [// file_path => manifest_directory_path
-        // 'js/app.js' => '',
+//         'js/app.js' => '',
     ],
 
     // -------------
