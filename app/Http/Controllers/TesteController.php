@@ -13,13 +13,14 @@ class TesteController extends Controller
     public function teste()
     {
 //        $this->emitirDanfePdf();
-        $unidade = Unidade::where('codigo_unidade', '321654')
+        $unidade = Unidade::where('codigo_unidade', '110062')
 //        $unidade = Unidade::where('codigo_unidade', '110621')
             ->first();
 
-//        $this->downloadNfePorChave($unidade,'53220407296540000103550010000115381852835898');
-//        $this->consultaNfePorChave($unidade,'53220407296540000103550010000115381852835898');
-        $this->consultaSefazDistDFe($unidade);
+        $this->downloadNfePorChave($unidade,'53220400949483000175550010000049611930119437');
+//        $this->consultaNfePorChave($unidade,'53220400949483000175550010000049611930119437');
+//        $this->confirmaOperacaoNfePorChave($unidade,'53220400949483000175550010000049611930119437');
+//        $this->consultaSefazDistDFe($unidade);
 //        $this->decode();
     }
 
