@@ -18,6 +18,7 @@ class CreateUnidadesTable extends Migration
             $table->string('codigo_unidade');
             $table->string('cnpj');
             $table->string('ie')->nullable();
+            $table->string('im')->nullable();
             $table->string('nome_resumido');
             $table->string('nome');
             $table->foreignId('estado_id')

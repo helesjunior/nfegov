@@ -249,9 +249,9 @@ trait NfeOrg
 //este numero deverá vir do banco de dados nas proximas buscas para reduzir
 //a quantidade de documentos, e para não baixar várias vezes as mesmas coisas.
 //            $ultNSU = 7639;
-            $ultNSU = 600;
+            $ultNSU = 615;
             $maxNSU = $ultNSU;
-            $loopLimit = 2; //mantenha o numero de consultas abaixo de 20, cada consulta retorna até 50 documentos por vez
+            $loopLimit = 20; //mantenha o numero de consultas abaixo de 20, cada consulta retorna até 50 documentos por vez
             $iCount = 0;
 
 //executa a busca de DFe em loop

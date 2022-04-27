@@ -17,10 +17,10 @@ class TesteController extends Controller
 //        $unidade = Unidade::where('codigo_unidade', '110621')
             ->first();
 
-        $this->downloadNfePorChave($unidade,'53220400949483000175550010000049611930119437');
+//        $this->downloadNfePorChave($unidade,'53220400949483000175550010000049611930119437');
 //        $this->consultaNfePorChave($unidade,'53220400949483000175550010000049611930119437');
 //        $this->confirmaOperacaoNfePorChave($unidade,'53220400949483000175550010000049611930119437');
-//        $this->consultaSefazDistDFe($unidade);
+        $this->consultaSefazDistDFe($unidade);
 //        $this->decode();
     }
 
