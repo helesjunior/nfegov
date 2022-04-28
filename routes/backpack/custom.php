@@ -40,4 +40,8 @@ Route::group([
     Route::crud('estado', 'EstadoCrudController');
     Route::crud('municipio', 'MunicipioCrudController');
     Route::crud('unidade', 'UnidadeCrudController');
+    Route::crud('nsu', 'NsuCrudController');
+    Route::crud('fornecedor', 'FornecedorCrudController');
+    Route::crud('nfe', 'NfeCrudController');
+    Route::crud('nfe-item', 'NfeItemCrudController');
 }); // this should be the absolute last line of this file

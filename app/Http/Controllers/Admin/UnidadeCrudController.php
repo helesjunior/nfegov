@@ -61,10 +61,10 @@ class UnidadeCrudController extends CrudController
     {
         $this->crud->set('show.setFromDb', false);
 
-        $this->addColumnCodigoUnidade();
+        $this->addColumnCodigoUnidade(true);
         $this->addColumnCnpj();
         $this->addColumnIe();
-        $this->addColumnNomeResumido();
+        $this->addColumnNomeResumido(true);
         $this->addColumnNome();
         $this->addColumnEstado();
         $this->addColumnMunicipio();

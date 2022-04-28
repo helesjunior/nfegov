@@ -103,7 +103,7 @@ trait NfeOrg
         }
     }
 
-    protected function downloadNfePorChave(Unidade $unidade, $chave)
+    protected function confirmaOperacaoNfePorChave(Unidade $unidade, $chave)
     {
         $base = new Base();
 
@@ -130,7 +130,59 @@ trait NfeOrg
 
             $tools->model('55');
 
+            $tpEvento = '210200'; //ciencia da operação
+            $xJust = ''; //a ciencia não requer justificativa
+            $nSeqEvento = 1; //a ciencia em geral será numero inicial de uma sequencia para essa nota e evento
+
+            $response = $tools->sefazManifesta($chave,$tpEvento,$xJust,$nSeqEvento);
+
+            //você pode padronizar os dados de retorno atraves da classe abaixo
+            //de forma a facilitar a extração dos dados do XML
+            //NOTA: mas lembre-se que esse XML muitas vezes será necessário,
+            //      quando houver a necessidade de protocolos
+            $stdCl = new Standardize($response);
+            //nesse caso $std irá conter uma representação em stdClass do XML
+            $std = $stdCl->toStd();
+            //nesse caso o $arr irá conter uma representação em array do XML
+            $arr = $stdCl->toArray();
+            //nesse caso o $json irá conter uma representação em JSON do XML
+            $json = $stdCl->toJson();
+            dd($json);
+
+        }catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    protected function downloadNfePorChave(Unidade $unidade, $chave)
+    {
+        $base = new Base();
+
+        $config = [
+            "atualizacao" => date('Y-m-d H:i:s'),
+            "tpAmb" => 1,
+            "razaosocial" => $unidade->nome,
+            "cnpj" => $unidade->cnpj,
+            "ie" => $unidade->ie,
+            "siglaUF" => $unidade->estado->sigla,
+            "schemes" => "PL_009_V4",
+            "versao" => '4.00'
+        ];
+
+        try {
+            $content = file_get_contents(env('APP_PATH') . env('APP_PATH_CERT') . $unidade->certificado_path);
+
+            $certificate = Certificate::readPfx(
+                $content,
+                $base->decryptPass($unidade->certificado_pass)
+            );
+
+            $tools = new Tools(json_encode($config), $certificate);
+            $tools->model('55');
+
             $response = $tools->sefazDownload($chave);
+
+            dd($response, $config, $chave);
 
             try {
                 $stz = new Standardize($response);
@@ -197,9 +249,9 @@ trait NfeOrg
 //este numero deverá vir do banco de dados nas proximas buscas para reduzir
 //a quantidade de documentos, e para não baixar várias vezes as mesmas coisas.
 //            $ultNSU = 7639;
-            $ultNSU = 0;
+            $ultNSU = 615;
             $maxNSU = $ultNSU;
-            $loopLimit = 2; //mantenha o numero de consultas abaixo de 20, cada consulta retorna até 50 documentos por vez
+            $loopLimit = 20; //mantenha o numero de consultas abaixo de 20, cada consulta retorna até 50 documentos por vez
             $iCount = 0;
 
 //executa a busca de DFe em loop

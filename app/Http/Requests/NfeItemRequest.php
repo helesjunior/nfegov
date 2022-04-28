@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UnidadeRequest extends FormRequest
+class NfeItemRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,14 +25,7 @@ class UnidadeRequest extends FormRequest
     public function rules()
     {
         return [
-            'codigo_unidade' => 'required',
-            'cnpj' => 'required|min:14|max:14',
-            'nome' => 'required|min:5|max:255',
-            'nome_resumido' => 'required|min:3|max:10',
-            'estado_id' => 'required',
-            'municipio_id' => 'required',
-            'certificado_path' => 'required',
-            'certificado_pass' => 'required'
+            // 'name' => 'required|min:5|max:255'
         ];
     }
 

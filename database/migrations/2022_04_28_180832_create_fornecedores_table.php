@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUnidadesTable extends Migration
+class CreateFornecedoresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,22 +13,25 @@ class CreateUnidadesTable extends Migration
      */
     public function up()
     {
-        Schema::create('unidades', function (Blueprint $table) {
+        Schema::create('fornecedores', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo_unidade');
             $table->string('cnpj');
             $table->string('ie')->nullable();
             $table->string('im')->nullable();
-            $table->string('nome_resumido');
             $table->string('nome');
+            $table->string('endereco');
+            $table->integer('endereco_numero')->nullable();
+            $table->string('bairro')->nullable();
             $table->foreignId('estado_id')
                 ->constrained()
                 ->onDelete('cascade');
             $table->foreignId('municipio_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->string('certificado_path');
-            $table->string('certificado_pass');
+            $table->string('cep')->nullable();
+            $table->string('telefone')->nullable();
+            $table->string('cnae')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -41,6 +44,6 @@ class CreateUnidadesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('unidades');
+        Schema::dropIfExists('fornecedores');
     }
 }

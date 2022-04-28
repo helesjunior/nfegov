@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 trait CommonColumns
 {
 
-    protected function addColumnEstado(): void
+    protected function addColumnEstado($table = false, $modal = true, $show = true, $export = true): void
     {
         CRUD::addColumn([
             'name' => 'estado_id',
@@ -17,10 +17,10 @@ trait CommonColumns
             'model' => 'App\Models\Estado',
             'entity' => 'estado',
             'attribute' => 'nome',
-            'visibleInTable' => true,
-            'visibleInModal' => true,
-            'visibleInShow' => true,
-            'visibleInExport' => true,
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export,
             'searchLogic' => function (Builder $query, $column, $searchTerm) {
                 $query->orWhereHas('estado', function ($q) use ($column, $searchTerm) {
                     $q->where(
@@ -33,7 +33,7 @@ trait CommonColumns
         ]);
     }
 
-    protected function addColumnMunicipio(): void
+    protected function addColumnMunicipio($table = false, $modal = true, $show = true, $export = true): void
     {
         CRUD::addColumn([
             'name' => 'municipio_id',
@@ -42,10 +42,10 @@ trait CommonColumns
             'model' => 'App\Models\municipio',
             'entity' => 'municipio',
             'attribute' => 'nome',
-            'visibleInTable' => true,
-            'visibleInModal' => true,
-            'visibleInShow' => true,
-            'visibleInExport' => true,
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export,
             'searchLogic' => function (Builder $query, $column, $searchTerm) {
                 $query->orWhereHas('municipio', function ($q) use ($column, $searchTerm) {
                     $q->where(
@@ -79,29 +79,120 @@ trait CommonColumns
         ]);
     }
 
-    protected function addColumnCnpj()
+    protected function addColumnCnpj($table = false, $modal = true, $show = true, $export = true)
     {
         CRUD::addColumn([
             'name' => 'cnpj',
             'label' => 'CNPJ',
             'type' => 'text',
-            'visibleInTable' => true,
-            'visibleInModal' => true,
-            'visibleInShow' => true,
-            'visibleInExport' => true
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
         ]);
     }
 
-    protected function addColumnIe()
+    protected function addColumnEndereco($table = false, $modal = true, $show = true, $export = true)
+    {
+        CRUD::addColumn([
+            'name' => 'endereco',
+            'label' => 'Endereço',
+            'type' => 'text',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnEnderecoNumero($table = false, $modal = true, $show = true, $export = true)
+    {
+        CRUD::addColumn([
+            'name' => 'endereco_numero',
+            'label' => 'Número',
+            'type' => 'text',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnBairro($table = false, $modal = true, $show = true, $export = true)
+    {
+        CRUD::addColumn([
+            'name' => 'bairro',
+            'label' => 'Bairro',
+            'type' => 'text',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnCep($table = false, $modal = true, $show = true, $export = true)
+    {
+        CRUD::addColumn([
+            'name' => 'cep',
+            'label' => 'Cep',
+            'type' => 'text',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnTelefone($table = false, $modal = true, $show = true, $export = true)
+    {
+        CRUD::addColumn([
+            'name' => 'cep',
+            'label' => 'Cep',
+            'type' => 'text',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnCnae($table = false, $modal = true, $show = true, $export = true)
+    {
+        CRUD::addColumn([
+            'name' => 'cep',
+            'label' => 'Cep',
+            'type' => 'text',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnIe($table = false, $modal = true, $show = true, $export = true)
     {
         CRUD::addColumn([
             'name' => 'ie',
             'label' => 'IE',
             'type' => 'text',
-            'visibleInTable' => true,
-            'visibleInModal' => true,
-            'visibleInShow' => true,
-            'visibleInExport' => true
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnIm($table = false, $modal = true, $show = true, $export = true)
+    {
+        CRUD::addColumn([
+            'name' => 'im',
+            'label' => 'IM',
+            'type' => 'text',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
         ]);
     }
 
@@ -125,16 +216,16 @@ trait CommonColumns
         ]);
     }
 
-    protected function addColumnNome(): void
+    protected function addColumnNome($table = false, $modal = true, $show = true, $export = true): void
     {
         CRUD::addColumn([
             'name' => 'nome',
             'label' => 'Nome',
             'type' => 'text',
-            'visibleInTable' => true,
-            'visibleInModal' => true,
-            'visibleInShow' => true,
-            'visibleInExport' => true,
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export,
             'searchLogic' => function (Builder $query, $column, $searchTerm) {
                 $query->orWhere(
                     'nome',
@@ -145,29 +236,29 @@ trait CommonColumns
         ]);
     }
 
-    protected function addColumnCreatedAt(): void
+    protected function addColumnCreatedAt($table = false, $modal = true, $show = true, $export = true): void
     {
         CRUD::addColumn([
             'name' => 'created_at',
             'label' => 'Criado em',
             'type' => 'datetime',
-            'visibleInTable' => true,
-            'visibleInModal' => true,
-            'visibleInShow' => true,
-            'visibleInExport' => true
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
         ]);
     }
 
-    protected function addColumnUpdatedAt(): void
+    protected function addColumnUpdatedAt($table = false, $modal = true, $show = true, $export = true): void
     {
         CRUD::addColumn([
             'name' => 'updated_at',
             'label' => 'Alterado em',
             'type' => 'datetime',
-            'visibleInTable' => true,
-            'visibleInModal' => true,
-            'visibleInShow' => true,
-            'visibleInExport' => true
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
         ]);
     }
 
