@@ -6,3 +6,7 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('estado') }}'><i class='nav-icon la la-question'></i> Estados</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('municipio') }}'><i class='nav-icon la la-question'></i> Municipios</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('unidade') }}'><i class='nav-icon la la-question'></i> Unidades</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('nsu') }}'><i class='nav-icon la la-question'></i> Nsus</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('fornecedor') }}'><i class='nav-icon la la-question'></i> Fornecedors</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('nfe') }}'><i class='nav-icon la la-question'></i> Nves</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('nfe-item') }}'><i class='nav-icon la la-question'></i> Nfe items</a></li>
