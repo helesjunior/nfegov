@@ -25,7 +25,14 @@ class UnidadeRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'codigo_unidade' => 'required',
+            'cnpj' => 'required|min:14|max:14',
+            'nome' => 'required|min:5|max:255',
+            'nome_resumido' => 'required|min:3|max:10',
+            'estado_id' => 'required',
+            'municipio_id' => 'required',
+            'certificado_path' => 'required',
+            'certificado_pass' => 'required'
         ];
     }
 
