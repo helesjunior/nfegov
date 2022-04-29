@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Route::crud('/', '\App\Http\Controllers\Admin\FornecedorCrudController');
+//
 Route::get('/', function () {
     return view('welcome');
 });

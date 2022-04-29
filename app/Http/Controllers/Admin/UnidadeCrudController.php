@@ -42,6 +42,7 @@ class UnidadeCrudController extends CrudController
         CRUD::setModel(Unidade::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/unidade');
         CRUD::setEntityNameStrings('unidade', 'unidades');
+        CRUD::orderBy('codigo_unidade', 'asc');
     }
 
     /**

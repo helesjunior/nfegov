@@ -108,7 +108,7 @@ trait NfeOrg
         }
     }
 
-    protected function confirmaOperacaoNfePorChave(Unidade $unidade, $chave)
+    protected function confirmaOperacaoNfePorChave(Unidade $unidade, $chave, $evento_op)
     {
         $base = new Base();
 
@@ -135,7 +135,7 @@ trait NfeOrg
 
             $tools->model('55');
 
-            $tpEvento = '210200'; //ciencia da operação
+            $tpEvento = $evento_op; //ciencia da operação
             $xJust = ''; //a ciencia não requer justificativa
             $nSeqEvento = 1; //a ciencia em geral será numero inicial de uma sequencia para essa nota e evento
 
@@ -145,14 +145,15 @@ trait NfeOrg
             //de forma a facilitar a extração dos dados do XML
             //NOTA: mas lembre-se que esse XML muitas vezes será necessário,
             //      quando houver a necessidade de protocolos
-            $stdCl = new Standardize($response);
-            //nesse caso $std irá conter uma representação em stdClass do XML
-            $std = $stdCl->toStd();
-            //nesse caso o $arr irá conter uma representação em array do XML
-            $arr = $stdCl->toArray();
-            //nesse caso o $json irá conter uma representação em JSON do XML
-            $json = $stdCl->toJson();
-            dd($json);
+//            $stdCl = new Standardize($response);
+//            //nesse caso $std irá conter uma representação em stdClass do XML
+//            $std = $stdCl->toStd();
+//            //nesse caso o $arr irá conter uma representação em array do XML
+//            $arr = $stdCl->toArray();
+//            //nesse caso o $json irá conter uma representação em JSON do XML
+//            $json = $stdCl->toJson();
+
+            return true;
 
         } catch (\Exception $e) {
             echo $e->getMessage();
@@ -284,7 +285,7 @@ trait NfeOrg
                 $maxNSU = $node->getElementsByTagName('maxNSU')->item(0)->nodeValue;
                 $lote = $node->getElementsByTagName('loteDistDFeInt')->item(0);
 
-                if($cStat == '656'){
+                if ($cStat == '656') {
                     continue;
                 }
                 $nsu = new Nsu();
@@ -314,19 +315,28 @@ trait NfeOrg
                     $tipo = substr($schema, 0, 6);
                     //processar o conteudo do NSU, da forma que melhor lhe interessar
                     //esse processamento depende do seu aplicativo
-                    if (substr($schema,0,6) == 'resNFe') {
+                    if (substr($schema, 0, 6) == 'resNFe') {
                         $xml = $this->decodeDoczip($doc->nodeValue);
                         $stz = new Standardize($xml);
                         $std = $stz->toStd();
-                        if(isset($std->chNFe)){
-                            $content = $this->downloadNfePorChave($unidade,$std->chNFe);
-                            $this->lerXmlNfe($content, $nsu);
+                        if (isset($std->chNFe)) {
+                            $content = $this->downloadNfePorChave($unidade, $std->chNFe);
                         }
 
                     }
-                    if (substr($schema,0,7) == 'procNFe') {
+                    if (substr($schema, 0, 7) == 'procNFe') {
                         $content = $this->decodeDoczip($doc->nodeValue);
+                    }
+
+                    $stz = new Standardize($content);
+                    $content_teste = $stz->toStd();
+
+                    if (isset($content_teste->NFe)) {
                         $this->lerXmlNfe($content, $nsu);
+                    }
+
+                    if (isset($content_teste->chNFe)) {
+                        $this->confirmaOperacaoNfePorChave($unidade,$content_teste->chNFe,'210210');
                     }
 
                     dump($content);
@@ -474,10 +484,10 @@ trait NfeOrg
             'cnpj' => $dados->CNPJ,
             'ie' => @$dados->IE,
             'im' => @$dados->IM,
-            'nome' => $dados->xNome,
-            'endereco' => $dados->enderEmit->xLgr,
+            'nome' => strtoupper($dados->xNome),
+            'endereco' => strtoupper($dados->enderEmit->xLgr),
             'endereco_numero' => @$dados->enderEmit->nro,
-            'bairro' => @$dados->enderEmit->xBairro,
+            'bairro' => @strtoupper($dados->enderEmit->xBairro),
             'estado_id' => $municipio->estado->id,
             'municipio_id' => $municipio->id,
             'cep' => @$dados->enderEmit->CEP,
