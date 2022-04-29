@@ -31,7 +31,7 @@ class CreateNfesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('fornecedor_id')->references('id')->on('fornecedores');
+            $table->foreign('fornecedor_id')->references('id')->on('fornecedores')->onDelete('cascade');
         });
     }
 

@@ -6,6 +6,7 @@ use App\Http\Traits\NfeOrg;
 use App\Models\Nsu;
 use App\Models\Unidade;
 use Illuminate\Http\Request;
+use NFePHP\NFe\Common\Standardize;
 
 class TesteController extends Controller
 {
@@ -14,14 +15,24 @@ class TesteController extends Controller
     public function teste()
     {
 //        $this->emitirDanfePdf();
-        $unidade = Unidade::where('codigo_unidade', '99')
-//        $unidade = Unidade::where('codigo_unidade', '110621')
-            ->first();
+//        $unidade = Unidade::where('codigo_unidade', '99')
+        $unidades = Unidade::where('codigo_unidade',"<>", '99')
+            ->get();
 
-//        $this->downloadNfePorChave($unidade,'53220400949483000175550010000049611930119437');
+
+
+//        $unidade = Unidade::where('codigo_unidade', '99')
+//            ->first();
+
+//        dd($this->downloadNfePorChave($unidade,'53220400949483000175550010000049611930119437'));
+
+//        $this->consultaSefazDistDFe($unidade);
+
 //        $this->consultaNfePorChave($unidade,'53220400949483000175550010000049611930119437');
 //        $this->confirmaOperacaoNfePorChave($unidade,'53220400949483000175550010000049611930119437');
-        $this->consultaSefazDistDFe($unidade);
+        foreach ($unidades as $unidade){
+            $this->consultaSefazDistDFe($unidade);
+        }
 //        $this->decode();
 //        $this->emitirDanfePdf($this->xml());
 

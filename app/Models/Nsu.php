@@ -28,14 +28,15 @@ class Nsu extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-    public function inserirUltimoNsu(int $ultimo_nsu, Unidade $unidade)
+    public function inserirUltimoNsu(int $ultimo_nsu, Unidade $unidade, $xml)
     {
         return Nsu::updateOrCreate([
             'unidade_id' => $unidade->id,
-            'ultimo_nsu' => $ultimo_nsu
+            'ultimo_nsu' => $ultimo_nsu,
         ],[
             'unidade_id' => $unidade->id,
-            'ultimo_nsu' => $ultimo_nsu
+            'ultimo_nsu' => $ultimo_nsu,
+            'xml' => $xml
         ]);
 
     }
