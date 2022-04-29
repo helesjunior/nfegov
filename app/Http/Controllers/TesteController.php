@@ -14,29 +14,11 @@ class TesteController extends Controller
 
     public function teste()
     {
-        $unidade = Unidade::where('codigo_unidade', '110062')
-            ->first();
+//        $unidade = Unidade::where('codigo_unidade', '110062')
+//            ->first();
+//        $xml = $this->decodeDoczip('H4sIAAAAAAAEAIVSXW+CQBD8K4Z3ub07vrNeYq022goErGl8Q0Al4cMAEe2v7ym2jX3py+3OZmZnMzms08adpYNzkZeNc26SkXJo26NDSNd1asfVqt4TBkDJx/ItjA9pESk/5Ox/8jArmzYq41QZnNK6iaqRQlWg9x0P+mNVt1G+y5o4ytWs3KnbmpS7VBEYH+SJQuOMgQY2o4YhTaQNN3UdQPaMUhNsk1qWbXBqMx1Jr8GJ6y/EowbJbYhntypS8RSEg/DdD+bLqbvywsHEC3wvGK/mawlCMkbS83A+FZRpwDRLowyJhJgcpkUmGDA2BG3I9BWYDrMcjQ+BOwBIegK2R3cmKJJbxZN8uGZw1bCQXAEm2X4d5aL+7Ew4vSZLb7PJFxdYPx95cTmZzQuM5K6eJE2DNN621V9fWzr++t45WPp11Qp6yw4s3ZAx2BxJP8Y4zNprTPK27xZJ/yPEF35ozXAaAgAA');
+//        dd($this->downloadNfePorChave($unidade, '53220400949483000175550010000049611930119437'));
 
-        $xml = $this->decodeDoczip('H4sIAAAAAAAEAIVSXW+CQBD8K4Z3ub07vrNeYq022goErGl8Q0Al4cMAEe2v7ym2jX3py+3OZmZnMzms08adpYNzkZeNc26SkXJo26NDSNd1asfVqt4TBkDJx/ItjA9pESk/5Ox/8jArmzYq41QZnNK6iaqRQlWg9x0P+mNVt1G+y5o4ytWs3KnbmpS7VBEYH+SJQuOMgQY2o4YhTaQNN3UdQPaMUhNsk1qWbXBqMx1Jr8GJ6y/EowbJbYhntypS8RSEg/DdD+bLqbvywsHEC3wvGK/mawlCMkbS83A+FZRpwDRLowyJhJgcpkUmGDA2BG3I9BWYDrMcjQ+BOwBIegK2R3cmKJJbxZN8uGZw1bCQXAEm2X4d5aL+7Ew4vSZLb7PJFxdYPx95cTmZzQuM5K6eJE2DNN621V9fWzr++t45WPp11Qp6yw4s3ZAx2BxJP8Y4zNprTPK27xZJ/yPEF35ozXAaAgAA');
-
-        $stz = new Standardize();
-        $std = $stz->toStd('<?xml version="1.0" encoding="UTF-8"?>
-<resNFe xmlns="http://www.portalfiscal.inf.br/nfe" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" versao="1.01">
-   <chNFe>43220409216620000137550020021170971889631925</chNFe>
-   <CNPJ>09216620000137</CNPJ>
-   <xNome>BRS SUPRIMENTOS CORPORATIVOS S/A</xNome>
-   <IE>1240248412</IE>
-   <dhEmi>2022-04-25T07:28:43-03:00</dhEmi>
-   <tpNF>1</tpNF>
-   <vNF>3463.68</vNF>
-   <digVal>rzw70vKdMOZZlJy0VDp3myv7sG0=</digVal>
-   <dhRecbto>2022-04-25T07:29:00-03:00</dhRecbto>
-   <nProt>143220085666293</nProt>
-   <cSitNFe>1</cSitNFe>
-</resNFe>');
-
-        dd($std);
-//        $this->downloadNfePorChave($unidade, '53220400949483000175550010000049611930119437')
 
 //        dd($this->consultaNfePorChave($unidade, '43220409216620000137550020021170971889631925'));
 
