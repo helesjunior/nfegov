@@ -2,6 +2,11 @@
 
 namespace App\Http\Traits;
 
+use App\Models\Fornecedor;
+use App\Models\Municipio;
+use App\Models\Nfe;
+use App\Models\NfeItem;
+use App\Models\Nsu;
 use App\Models\Unidade;
 use App\Repositories\Base;
 use NFePHP\Common\Certificate;
@@ -98,7 +103,7 @@ trait NfeOrg
             $json = $stdCl->toJson();
             dd($json);
 
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             echo $e->getMessage();
         }
     }
@@ -134,7 +139,7 @@ trait NfeOrg
             $xJust = ''; //a ciencia não requer justificativa
             $nSeqEvento = 1; //a ciencia em geral será numero inicial de uma sequencia para essa nota e evento
 
-            $response = $tools->sefazManifesta($chave,$tpEvento,$xJust,$nSeqEvento);
+            $response = $tools->sefazManifesta($chave, $tpEvento, $xJust, $nSeqEvento);
 
             //você pode padronizar os dados de retorno atraves da classe abaixo
             //de forma a facilitar a extração dos dados do XML
@@ -149,7 +154,7 @@ trait NfeOrg
             $json = $stdCl->toJson();
             dd($json);
 
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             echo $e->getMessage();
         }
     }
@@ -201,7 +206,7 @@ trait NfeOrg
                 echo str_replace("\n", "<br/>", $e->getMessage());
             }
 
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             echo $e->getMessage();
         }
     }
@@ -366,4 +371,106 @@ trait NfeOrg
 
         dd($content);
     }
+
+    protected function lerXmlNfe($xml, Nsu $nsu)
+    {
+        $stz = new Standardize($xml);
+        $std = $stz->toStd();
+
+        //dados fornecedor
+        $fornecedor = new Fornecedor();
+        $fornecedor = $fornecedor->inserirOuAtulizadarFornecedor($this->getFornecedor($std->NFe->infNFe->emit));
+
+        //dados
+        $nfe = new Nfe();
+        $nfe = $nfe->inserirOuAtualizarNfe($this->getDadosNfe($xml, $nsu, $fornecedor));
+
+        //dados itens
+        $nfeItens = new NfeItem();
+        $nfeItens = $nfeItens->inserirOuAtualizarNfeItens($this->getItensNfe($std->NFe->infNFe->det, $nfe));
+        dd($nfeItens);
+
+        dd($xml, $nfe);
+    }
+
+    protected function getItensNfe($dados,Nfe $nfe)
+    {
+        $retorno = [];
+        $i = 1;
+        if (is_array($dados)) {
+            foreach ($dados as $dado) {
+                $retorno[] = [
+                    'nfe_id' => $nfe->id,
+                    'sequencial' => $i,
+                    'descricao' => strtoupper($dado->prod->xProd),
+                    'cfop' => $dado->prod->CFOP,
+                    'unidade_medida' => $dado->prod->uCom,
+                    'quantidade' => $dado->prod->qCom,
+                    'valor_unitario' => $dado->prod->vUnCom,
+                    'valor_total' => $dado->prod->vProd,
+                    'unidade_medida_tributado' => $dado->prod->uTrib,
+                    'quantidade_tributado' => $dado->prod->qTrib,
+                    'valor_unitario_tributado' => $dado->prod->vUnTrib,
+                ];
+                $i++;
+            }
+        } else {
+            $retorno = [
+                'nfe_id' => $nfe->id,
+                'sequencial' => $i,
+                'descricao' => $dados->prod->xProd,
+                'cfop' => $dados->prod->CFOP,
+                'unidade_medida' => $dados->prod->uCom,
+                'quantidade' => $dados->prod->qCom,
+                'valor_unitario' => $dados->prod->vUnCom,
+                'valor_total' => $dados->prod->vProd,
+                'unidade_medida_tributado' => $dados->prod->uTrib,
+                'quantidade_tributado' => $dados->prod->qTrib,
+                'valor_unitario_tributado' => $dados->prod->vUnTrib,
+            ];;
+        }
+        return $retorno;
+    }
+
+    protected function getDadosNfe($xml, Nsu $nsu, Fornecedor $fornecedor)
+    {
+        $stz = new Standardize($xml);
+        $nfe = $stz->toStd();
+
+        return [
+            'nsu_id' => $nsu->id,
+            'fornecedor_id' => $fornecedor->id,
+            'numero' => $nfe->NFe->infNFe->ide->nNF,
+            'chave' => substr($nfe->NFe->infNFe->attributes->Id, 3, 44),
+            'serie' => $nfe->NFe->infNFe->ide->serie,
+            'data_emissao' => $nfe->NFe->infNFe->ide->dhEmi,
+            'data_saida_entrada' => @$nfe->NFe->infNFe->ide->dhSaiEnt,
+            'valor' => $nfe->NFe->infNFe->total->ICMSTot->vNF,
+            'natureza_operacao' => strtoupper($nfe->NFe->infNFe->ide->natOp),
+            'xml' => $xml,
+        ];
+    }
+
+    protected function getFornecedor($dados)
+    {
+        $municipio = Municipio::where('codigo_ibge', $dados->enderEmit->cMun)
+            ->first();
+
+        return [
+            'cnpj' => $dados->CNPJ,
+            'ie' => $dados->IE,
+            'im' => $dados->IM,
+            'nome' => $dados->xNome,
+            'endereco' => $dados->enderEmit->xLgr,
+            'endereco_numero' => $dados->enderEmit->nro,
+            'bairro' => $dados->enderEmit->xBairro,
+            'estado_id' => $municipio->estado->id,
+            'municipio_id' => $municipio->id,
+            'cep' => $dados->enderEmit->CEP,
+            'telefone' => @$dados->enderEmit->fone,
+            'cnae' => @$dados->CNAE,
+        ];
+    }
+
+
 }

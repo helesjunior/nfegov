@@ -118,6 +118,19 @@ trait CommonColumns
         ]);
     }
 
+    protected function addColumnEmail($table = false, $modal = true, $show = true, $export = true)
+    {
+        CRUD::addColumn([
+            'name' => 'email',
+            'label' => 'E-mail',
+            'type' => 'email',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
     protected function addColumnBairro($table = false, $modal = true, $show = true, $export = true)
     {
         CRUD::addColumn([

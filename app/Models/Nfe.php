@@ -28,6 +28,17 @@ class Nfe extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function inserirOuAtualizarNfe(array $dados)
+    {
+        $chave = ['chave' => $dados['chave']];
+        unset($dados['chave']);
+        $nfe = Nfe::updateOrCreate(
+            $chave,
+            $dados
+        );
+
+        return $nfe;
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -41,12 +52,12 @@ class Nfe extends Model
 
     public function fornecedor()
     {
-        return $this->belongsTo(Fornecedor::class,'fornecedor_id');
+        return $this->belongsTo(Fornecedor::class, 'fornecedor_id');
     }
 
     public function itens()
     {
-        return $this->hasMany(NfeItem::class,'nfe_id');
+        return $this->hasMany(NfeItem::class, 'nfe_id');
     }
 
     /*

@@ -93,6 +93,16 @@ trait CommonFields
         ]);
     }
 
+    protected function addFieldIm($tab = null)
+    {
+        CRUD::addField([
+            'name' => 'im',
+            'label' => 'IM',
+            'type' => 'number',
+            'tab' => $tab
+        ]);
+    }
+
     protected function addFieldCodigoUnidadeNumber($tab = null)
     {
         CRUD::addField([
