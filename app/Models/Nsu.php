@@ -28,6 +28,18 @@ class Nsu extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function inserirUltimoNsu(int $ultimo_nsu, Unidade $unidade)
+    {
+        return Nsu::updateOrCreate([
+            'unidade_id' => $unidade->id,
+            'ultimo_nsu' => $ultimo_nsu
+        ],[
+            'unidade_id' => $unidade->id,
+            'ultimo_nsu' => $ultimo_nsu
+        ]);
+
+    }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -38,6 +50,7 @@ class Nsu extends Model
     {
         return $this->belongsTo(Unidade::class, 'unidade_id');
     }
+
     public function nfes()
     {
         return $this->hasMany(Nfe::class, 'nsu_id');

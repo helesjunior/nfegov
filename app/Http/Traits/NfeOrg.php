@@ -254,7 +254,8 @@ trait NfeOrg
 //este numero deverá vir do banco de dados nas proximas buscas para reduzir
 //a quantidade de documentos, e para não baixar várias vezes as mesmas coisas.
 //            $ultNSU = 7639;
-            $ultNSU = 615;
+
+            $ultNSU = Nsu::where('unidade_id', $unidade->id)->latest()->first()->ultimo_nsu;
             $maxNSU = $ultNSU;
             $loopLimit = 20; //mantenha o numero de consultas abaixo de 20, cada consulta retorna até 50 documentos por vez
             $iCount = 0;
@@ -289,6 +290,9 @@ trait NfeOrg
                 $maxNSU = $node->getElementsByTagName('maxNSU')->item(0)->nodeValue;
                 $lote = $node->getElementsByTagName('loteDistDFeInt')->item(0);
 
+                $nsu = new Nsu();
+                $nsu = $nsu->inserirUltimoNsu(intval($ultNSU), $unidade);
+
 //                if (in_array($cStat, ['137', '656']) {
 //
 //                    //137 - Nenhum documento localizado, a SEFAZ está te informando para consultar novamente após uma hora a contar desse momento
@@ -311,6 +315,7 @@ trait NfeOrg
                     $tipo = substr($schema, 0, 6);
                     //processar o conteudo do NSU, da forma que melhor lhe interessar
                     //esse processamento depende do seu aplicativo
+//                    $this->lerXmlNfe($content,$nsu);
                     dump($content);
                 }
                 if ($ultNSU == $maxNSU) {
@@ -387,10 +392,10 @@ trait NfeOrg
 
         //dados itens
         $nfeItens = new NfeItem();
-        $nfeItens = $nfeItens->inserirOuAtualizarNfeItens($this->getItensNfe($std->NFe->infNFe->det, $nfe));
-        dd($nfeItens);
+        $nfeItens->inserirOuAtualizarNfeItens($this->getItensNfe($std->NFe->infNFe->det, $nfe));
+        
+        return $nfe;
 
-        dd($xml, $nfe);
     }
 
     protected function getItensNfe($dados,Nfe $nfe)

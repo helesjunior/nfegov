@@ -14,19 +14,19 @@ class TesteController extends Controller
     public function teste()
     {
 //        $this->emitirDanfePdf();
-        $unidade = Unidade::where('codigo_unidade', '110062')
+        $unidade = Unidade::where('codigo_unidade', '99')
 //        $unidade = Unidade::where('codigo_unidade', '110621')
             ->first();
 
 //        $this->downloadNfePorChave($unidade,'53220400949483000175550010000049611930119437');
 //        $this->consultaNfePorChave($unidade,'53220400949483000175550010000049611930119437');
 //        $this->confirmaOperacaoNfePorChave($unidade,'53220400949483000175550010000049611930119437');
-//        $this->consultaSefazDistDFe($unidade);
+        $this->consultaSefazDistDFe($unidade);
 //        $this->decode();
 //        $this->emitirDanfePdf($this->xml());
 
-        $nsu = Nsu::where('id', 1)->first();
-        $this->lerXmlNfe($this->xml(), $nsu);
+//        $nsu = Nsu::where('id', 1)->first();
+//        $this->lerXmlNfe($this->xml(), $nsu);
     }
 
     private function xml()
