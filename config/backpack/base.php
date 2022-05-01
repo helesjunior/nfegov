@@ -12,8 +12,9 @@ return [
     */
 
     // Date & Datetime Format Syntax: https://carbon.nesbot.com/docs/#api-localization
-    'default_date_format'     => 'D MMM YYYY',
-    'default_datetime_format' => 'D MMM YYYY, HH:mm',
+//    'default_date_format'     => 'D MMM YYYY',
+    'default_date_format'     => 'DD/MM/YYYY',
+    'default_datetime_format' => 'DD/MM/YYYY, HH:mm',
 
     // Direction, according to language
     // (left-to-right vs right-to-left)
@@ -31,7 +32,7 @@ return [
     // The string below will be passed through the url() helper.
     // - default: '' (project root)
     // - alternative: 'admin' (the admin's dashboard)
-    'home_link' => 'admin',
+    'home_link' => '',
 
     // Content of the HTML meta robots tag to prevent indexing and link following
     'meta_robots_content' => 'noindex, nofollow',

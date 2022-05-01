@@ -2,6 +2,9 @@
 
 return [
 
+    'app_path' => env('APP_PATH'),
+    'app_path_cert' => env('APP_PATH_CERT'),
+
     'encryption_iv' => env('ENCRYPTION_IV','1234567891011121'),
 
     /*

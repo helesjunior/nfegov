@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Trait para integração com pacote NFePHP.
+ *
+ * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+ */
+
 namespace App\Http\Traits;
 
 use App\Models\Fornecedor;
@@ -13,12 +19,24 @@ use NFePHP\Common\Certificate;
 use NFePHP\DA\NFe\Danfe;
 use NFePHP\NFe\Common\Standardize;
 use NFePHP\NFe\Tools;
+use phpDocumentor\Reflection\Types\This;
+
+
 
 trait NfeOrg
 {
-    protected function emitirDanfePdf()
+
+    /**
+     * Emissão da NFe em PDF.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
+    protected function emitirDanfePdf($xml)
     {
-        $xml = file_get_contents('C:/nfe.xml');
         $logo = '';
         try {
 
@@ -40,7 +58,7 @@ trait NfeOrg
             $danfe->setDefaultFont($font = 'times');
             $danfe->setDefaultDecimalPlaces(4);
             $danfe->debugMode(false);
-            $danfe->creditsIntegratorFooter('by NFeGov');
+            $danfe->creditsIntegratorFooter('by NFeGov (https://github.com/helesjunior/nfegov)', false);
             //$danfe->epec('891180004131899', '14/08/2018 11:24:45'); //marca como autorizada por EPEC
 
             // Caso queira mudar a configuracao padrao de impressao
@@ -56,33 +74,26 @@ trait NfeOrg
             header('Content-Type: application/pdf');
             echo $pdf;
         } catch (InvalidArgumentException $e) {
-            echo "Ocorreu um erro durante o processamento :" . $e->getMessage();
+            abort('500', $e->getMessage());
         }
 
     }
 
+    /**
+     * Consulta NFe por Chave de Acesso.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
     protected function consultaNfePorChave(Unidade $unidade, $chave)
     {
-        $base = new Base();
-
-        $config = [
-            "atualizacao" => date('Y-m-d H:i:s'),
-            "tpAmb" => 1,
-            "razaosocial" => $unidade->nome,
-            "cnpj" => $unidade->cnpj,
-            "ie" => $unidade->ie,
-            "siglaUF" => $unidade->estado->sigla,
-            "schemes" => "PL_009_V4",
-            "versao" => '4.00'
-        ];
+        $config = $this->montaConfig($unidade);
 
         try {
-            $content = file_get_contents(env('APP_PATH') . env('APP_PATH_CERT') . $unidade->certificado_path);
-
-            $certificate = Certificate::readPfx(
-                $content,
-                $base->decryptPass($unidade->certificado_pass)
-            );
+            $certificate = $this->buscaCertificado($unidade);
 
             $tools = new Tools(json_encode($config), $certificate);
 
@@ -101,35 +112,29 @@ trait NfeOrg
             $arr = $stdCl->toArray();
             //nesse caso o $json irá conter uma representação em JSON do XML
             $json = $stdCl->toJson();
-            dd($json);
+
+            return $json;
 
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
     }
 
+    /**
+     * Confirma Operação NFe por Chave de Acesso.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
     protected function confirmaOperacaoNfePorChave(Unidade $unidade, $chave, $evento_op)
     {
-        $base = new Base();
-
-        $config = [
-            "atualizacao" => date('Y-m-d H:i:s'),
-            "tpAmb" => 1,
-            "razaosocial" => $unidade->nome,
-            "cnpj" => $unidade->cnpj,
-            "ie" => $unidade->ie,
-            "siglaUF" => $unidade->estado->sigla,
-            "schemes" => "PL_009_V4",
-            "versao" => '4.00'
-        ];
+        $config = $this->montaConfig($unidade);
 
         try {
-            $content = file_get_contents(env('APP_PATH') . env('APP_PATH_CERT') . $unidade->certificado_path);
-
-            $certificate = Certificate::readPfx(
-                $content,
-                $base->decryptPass($unidade->certificado_pass)
-            );
+            $certificate = $this->buscaCertificado($unidade);
 
             $tools = new Tools(json_encode($config), $certificate);
 
@@ -160,28 +165,21 @@ trait NfeOrg
         }
     }
 
+    /**
+     * Realiza Download da NFe por Chave de Acesso.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
     protected function downloadNfePorChave(Unidade $unidade, $chave)
     {
-        $base = new Base();
-
-        $config = [
-            "atualizacao" => date('Y-m-d H:i:s'),
-            "tpAmb" => 1,
-            "razaosocial" => $unidade->nome,
-            "cnpj" => $unidade->cnpj,
-            "ie" => $unidade->ie,
-            "siglaUF" => $unidade->estado->sigla,
-            "schemes" => "PL_009_V4",
-            "versao" => '4.00'
-        ];
+        $config = $this->montaConfig($unidade);
 
         try {
-            $content = file_get_contents(env('APP_PATH') . env('APP_PATH_CERT') . $unidade->certificado_path);
-
-            $certificate = Certificate::readPfx(
-                $content,
-                $base->decryptPass($unidade->certificado_pass)
-            );
+            $certificate = $this->buscaCertificado($unidade);
 
             $tools = new Tools(json_encode($config), $certificate);
             $tools->model('55');
@@ -206,73 +204,46 @@ trait NfeOrg
         }
     }
 
+    /**
+     * Consulta NFe´s por CNPJ.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
     protected function consultaSefazDistDFe(Unidade $unidade)
     {
-        $base = new Base();
-
-        $config = [
-            "atualizacao" => date('Y-m-d H:i:s'),
-            "tpAmb" => 1,
-            "razaosocial" => $unidade->nome,
-            "cnpj" => $unidade->cnpj,
-            "ie" => $unidade->ie,
-            "siglaUF" => $unidade->estado->sigla,
-            "schemes" => "PL_009_V4",
-            "versao" => '4.00'
-        ];
-
+        $config = $this->montaConfig($unidade);
         try {
-            $content = file_get_contents(env('APP_PATH') . env('APP_PATH_CERT') . $unidade->certificado_path);
-
-            $certificate = Certificate::readPfx(
-                $content,
-                $base->decryptPass($unidade->certificado_pass)
-            );
+            $certificate = $this->buscaCertificado($unidade);
 
             $tools = new Tools(json_encode($config), $certificate);
 
-//            $chave = '53220207635498001422550010000013111642220619';
-//            $resp = $tools->sefazConsultaChave($chave);
-//
-//            $st = new Standardize();
-//            $std = $st->toStd($resp);
-//
-//            echo '<pre>';
-//            print_r($std);
-//            echo "</pre>";
-
             //só funciona para o modelo 55
             $tools->model('55');
-//este serviço somente opera em ambiente de produção
+            //este serviço somente opera em ambiente de produção
             $tools->setEnvironment(1);
-
-//este numero deverá vir do banco de dados nas proximas buscas para reduzir
-//a quantidade de documentos, e para não baixar várias vezes as mesmas coisas.
-//            $ultNSU = 7639;
 
             $ultNSU = Nsu::where('unidade_id', $unidade->id)->latest()->first()->ultimo_nsu;
             $maxNSU = $ultNSU;
-            $loopLimit = 20; //mantenha o numero de consultas abaixo de 20, cada consulta retorna até 50 documentos por vez
+            $loopLimit = ($ultNSU == 0) ? 10 : 2;
             $iCount = 0;
 
-//executa a busca de DFe em loop
             while ($ultNSU <= $maxNSU) {
                 $iCount++;
                 if ($iCount >= $loopLimit) {
-                    //o limite de loops foi atingido pare de consultar
                     break;
                 }
                 try {
-                    //executa a busca pelos documentos
                     $resp = $tools->sefazDistDFe($ultNSU);
                 } catch (\Exception $e) {
                     echo $e->getMessage();
-                    //pare de consultar e resolva o erro (pode ser que a SEFAZ esteja fora do ar)
                     break;
                 }
                 dump($resp);
 
-                //extrair e salvar os retornos
                 $dom = new \DOMDocument();
                 $dom->loadXML($resp);
                 $node = $dom->getElementsByTagName('retDistDFeInt')->item(0);
@@ -286,36 +257,27 @@ trait NfeOrg
                 $lote = $node->getElementsByTagName('loteDistDFeInt')->item(0);
 
                 if ($cStat == '656') {
-                    continue;
+                    //656 - Consumo Indevido, a SEFAZ bloqueou o seu acesso por uma hora pois as regras de consultas não foram observadas
+                    break;
                 }
                 $nsu = new Nsu();
                 $nsu = $nsu->inserirUltimoNsu(intval($ultNSU), $unidade, $resp);
 
-//                if (in_array($cStat, ['137', '656']) {
-//
-//                    //137 - Nenhum documento localizado, a SEFAZ está te informando para consultar novamente após uma hora a contar desse momento
-//                    //656 - Consumo Indevido, a SEFAZ bloqueou o seu acesso por uma hora pois as regras de consultas não foram observadas
-//                    //nesses dois casos pare as consultas imediatamente e retome apenas daqui a uma hora, pelo menos !!
-//        break;
-//            }
+//                if($cStat == '137'){
+//                    137 - Nenhum documento localizado, a SEFAZ está te informando para consultar novamente após uma hora a contar desse momento
+//                    break;
+//                }
+
                 if (empty($lote)) {
-                    //lote vazio
                     continue;
                 }
-                //essas tags irão conter os documentos zipados
                 $docs = $lote->getElementsByTagName('docZip');
                 foreach ($docs as $doc) {
+                    $content = '';
                     $numnsu = $doc->getAttribute('NSU');
                     $schema = $doc->getAttribute('schema');
-
-                    //descompacta o documento e recupera o XML original
-//                    $content = gzdecode(base64_decode($doc->nodeValue));
-
-                    //identifica o tipo de documento
                     $tipo = substr($schema, 0, 6);
-                    //processar o conteudo do NSU, da forma que melhor lhe interessar
-                    //esse processamento depende do seu aplicativo
-                    if (substr($schema, 0, 6) == 'resNFe') {
+                    if ($tipo == 'resNFe') {
                         $xml = $this->decodeDoczip($doc->nodeValue);
                         $stz = new Standardize($xml);
                         $std = $stz->toStd();
@@ -324,7 +286,7 @@ trait NfeOrg
                         }
 
                     }
-                    if (substr($schema, 0, 7) == 'procNFe') {
+                    if ($tipo == 'procNF') {
                         $content = $this->decodeDoczip($doc->nodeValue);
                     }
 
@@ -336,45 +298,38 @@ trait NfeOrg
                     }
 
                     if (isset($content_teste->chNFe)) {
-                        $this->confirmaOperacaoNfePorChave($unidade,$content_teste->chNFe,'210210');
+                        $this->confirmaOperacaoNfePorChave($unidade, $content_teste->chNFe, '210210');
                     }
-
                     dump($content);
                 }
                 if ($ultNSU == $maxNSU) {
-                    //quando o numero máximo de NSU foi atingido não existem mais dados a buscar
-                    //nesse caso a proxima busca deve ser no minimo após mais uma hora
                     break;
                 }
                 sleep(2);
             }
-
             dump('Finalizado!');
+            return true;
 
         } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
 
-    protected function status()
+    /**
+     * Consulta Status Serviço.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
+    protected function status(Unidade $unidade)
     {
-        $config = [
-            "atualizacao" => date('Y-m-d H:i:s'),
-            "tpAmb" => 1,
-            "razaosocial" => env('RAZAOSOCIAL'),
-            "cnpj" => env('CNPJ'),
-            "ie" => env('IE'),
-            "siglaUF" => env('SIGLAUF'),
-            "versao" => '3.00'
-        ];
+        $config = $this->montaConfig($unidade);
 
         try {
-            $content = file_get_contents(env('CERTIFICADO_DEV'));
-
-            $certificate = Certificate::readPfx(
-                $content,
-                env('CERTIFICADO_PASS')
-            );
+            $certificate = $this->buscaCertificado($unidade);
 
             $tools = new Tools(json_encode($config), $certificate);
 
@@ -383,19 +338,35 @@ trait NfeOrg
             $st = new Standardize();
             $std = $st->toStd($resp);
 
-            echo '<pre>';
-            print_r($std);
-            echo "</pre>";
+            return $std;
         } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
 
+    /**
+     * Decodifica arquvo.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
     protected function decodeDoczip($code)
     {
         return gzdecode(base64_decode($code));
     }
 
+    /**
+     * Leitura XML.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
     protected function lerXmlNfe($xml, Nsu $nsu)
     {
         $stz = new Standardize($xml);
@@ -417,6 +388,15 @@ trait NfeOrg
 
     }
 
+    /**
+     * Busca Itens da NFe.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
     protected function getItensNfe($dados, Nfe $nfe)
     {
         $retorno = [];
@@ -456,6 +436,15 @@ trait NfeOrg
         return $retorno;
     }
 
+    /**
+     * Busca Dados da NFe.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
     protected function getDadosNfe($xml, Nsu $nsu, Fornecedor $fornecedor)
     {
         $stz = new Standardize($xml);
@@ -475,6 +464,15 @@ trait NfeOrg
         ];
     }
 
+    /**
+     * Busca dados Fornecedor.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
     protected function getFornecedor($dados)
     {
         $municipio = Municipio::where('codigo_ibge', $dados->enderEmit->cMun)
@@ -496,5 +494,48 @@ trait NfeOrg
         ];
     }
 
+    /**
+     * Monta array configuração.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
+    protected function montaConfig(Unidade $unidade)
+    {
+        return [
+            "atualizacao" => date('Y-m-d H:i:s'),
+            "tpAmb" => 1,
+            "razaosocial" => $unidade->nome,
+            "cnpj" => $unidade->cnpj,
+            "ie" => $unidade->ie,
+            "siglaUF" => $unidade->estado->sigla,
+            "schemes" => "PL_009_V4",
+            "versao" => '4.00'
+        ];
+    }
+
+    /**
+     * Busca certificado por Unidade.
+     *
+     * @category NFeGov
+     * @package App\Http\Traits\NfeOrg
+     * @copyright 2022~2050 NFeGov
+     * @license MIT License. <https://opensource.org/licenses/MIT>
+     * @author Heles Resende S. Júnior <helesjunior@gmail.com>
+     */
+    protected function buscaCertificado(Unidade $unidade)
+    {
+        $base = new Base();
+
+        $content = file_get_contents(config('app.app_path') . config('app.app_path_cert') . $unidade->certificado_path);
+
+        return Certificate::readPfx(
+            $content,
+            $base->decryptPass($unidade->certificado_pass)
+        );
+    }
 
 }

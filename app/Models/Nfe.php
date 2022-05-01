@@ -40,6 +40,30 @@ class Nfe extends Model
         return $nfe;
     }
 
+    public function getUnidade()
+    {
+        $unidade = Unidade::find($this->nsu->unidade_id);
+        return $unidade->codigo_unidade . ' - ' . $unidade->nome_resumido;
+    }
+
+    public function getFornecedorCnpj()
+    {
+        $fornecedor = Fornecedor::find($this->fornecedor_id);
+        return $fornecedor->cnpj;
+    }
+
+    public function getFornecedorNome()
+    {
+        $fornecedor = Fornecedor::find($this->fornecedor_id);
+        return $fornecedor->nome;
+    }
+
+    public function getMunicipioFornecedor()
+    {
+        $fornecedor = Fornecedor::find($this->fornecedor_id);
+        return $fornecedor->municipio->nome;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

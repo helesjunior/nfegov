@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\BuscarNfesJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,7 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $this->schedule = $schedule;
+        $this->criarJobs();
     }
 
     /**
@@ -38,4 +40,20 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
+
+    protected function criarJobs()
+    {
+        //agendamentos
+        $this->criarJobBuscarNFes();
+    }
+
+    protected function criarJobBuscarNFes()
+    {
+        $this->schedule->job(new BuscarNfesJob())
+            ->timezone('America/Sao_Paulo')
+//            ->weekdays()
+//            ->everyThreeHours();
+            ->everyMinute();
+    }
+
 }
