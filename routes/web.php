@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use \App\Http\Traits\NfeOrg;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->to('/nfes');
 });
 
-Route::get('decode', '\App\Http\Controllers\TesteController@decode');
-Route::get('consulta', '\App\Http\Controllers\TesteController@consulta');
-Route::get('status', '\App\Http\Controllers\TesteController@status');
-Route::get('pdf', '\App\Http\Controllers\TesteController@teste');
+Route::crud('/nfes', '\App\Http\Controllers\ConsultaNfeCrudController');
+
+Route::get('/pdf/{chave_acesso}', '\App\Http\Controllers\EmitirPdfNfeController@index');

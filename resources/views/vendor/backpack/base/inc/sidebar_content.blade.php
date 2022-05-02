@@ -10,3 +10,4 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('fornecedor') }}'><i class='nav-icon la la-question'></i> Fornecedors</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('nfe') }}'><i class='nav-icon la la-question'></i> Nves</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('nfe-item') }}'><i class='nav-icon la la-question'></i> Nfe items</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('consulta-nfe') }}'><i class='nav-icon la la-question'></i> Consulta nves</a></li>

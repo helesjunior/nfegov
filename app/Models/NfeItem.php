@@ -28,6 +28,24 @@ class NfeItem extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function inserirOuAtualizarNfeItens(array $dados)
+    {
+        if(isset($dados[0])){
+            foreach ($dados as $dado) {
+                $nfeitens = NfeItem::updateOrCreate(
+                    $dado,
+                    $dado
+                );
+            }
+        }else{
+            $nfeitens = NfeItem::updateOrCreate(
+                $dados,
+                $dados
+            );
+        }
+
+        return $nfeitens;
+    }
 
     /*
     |--------------------------------------------------------------------------

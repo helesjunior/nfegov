@@ -20,9 +20,10 @@ class CreateNfesTable extends Migration
                 ->onDelete('cascade');
             $table->integer('fornecedor_id');
             $table->integer('numero');
-            $table->string('chave');
+            $table->string('chave')->unique();
             $table->integer('serie');
-            $table->date('data_emissao');
+            $table->dateTime('data_emissao');
+            $table->dateTime('data_saida_entrada')->nullable();
             $table->decimal('valor',17,2);
             $table->string('natureza_operacao');
             $table->text('xml');
@@ -30,7 +31,7 @@ class CreateNfesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('fornecedor_id')->references('id')->on('fornecedores');
+            $table->foreign('fornecedor_id')->references('id')->on('fornecedores')->onDelete('cascade');
         });
     }
 

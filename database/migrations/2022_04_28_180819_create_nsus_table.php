@@ -19,7 +19,7 @@ class CreateNsusTable extends Migration
                 ->constrained()
                 ->onDelete('cascade');
             $table->integer('ultimo_nsu');
-            $table->text('xml');
+            $table->text('xml')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

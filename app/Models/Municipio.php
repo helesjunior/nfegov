@@ -34,6 +34,9 @@ class Municipio extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function estado(){
+        return $this->belongsTo(Estado::class);
+    }
 
     /*
     |--------------------------------------------------------------------------

@@ -28,6 +28,17 @@ class Fornecedor extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function inserirOuAtulizadarFornecedor(array $dados)
+    {
+        $fornecedor_cnpj = ['cnpj' => $dados['cnpj']];
+        unset($dados['cnpj']);
+        $fornecedor = Fornecedor::updateOrCreate(
+            $fornecedor_cnpj,
+            $dados
+        );
+
+        return $fornecedor;
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -38,10 +49,12 @@ class Fornecedor extends Model
     {
         return $this->hasMany(Nfe::class, 'fornecedor_id');
     }
+
     public function estado()
     {
         return $this->belongsTo(Estado::class);
     }
+
     public function municipio()
     {
         return $this->belongsTo(Municipio::class);

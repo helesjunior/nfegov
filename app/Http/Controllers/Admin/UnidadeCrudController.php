@@ -42,6 +42,7 @@ class UnidadeCrudController extends CrudController
         CRUD::setModel(Unidade::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/unidade');
         CRUD::setEntityNameStrings('unidade', 'unidades');
+        CRUD::orderBy('codigo_unidade', 'asc');
     }
 
     /**
@@ -64,6 +65,7 @@ class UnidadeCrudController extends CrudController
         $this->addColumnCodigoUnidade(true);
         $this->addColumnCnpj();
         $this->addColumnIe();
+        $this->addColumnIm();
         $this->addColumnNomeResumido(true);
         $this->addColumnNome();
         $this->addColumnEstado();
@@ -85,6 +87,7 @@ class UnidadeCrudController extends CrudController
         $this->addFieldCodigoUnidadeNumber();
         $this->addFieldCnpj();
         $this->addFieldIe();
+        $this->addFieldIm();
         $this->addFieldNomeResumidoText(null,true);
         $this->addFieldNomeText(null,true);
         $this->addFieldEstadoCombo();

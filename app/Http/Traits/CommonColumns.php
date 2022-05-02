@@ -118,6 +118,19 @@ trait CommonColumns
         ]);
     }
 
+    protected function addColumnEmail($table = false, $modal = true, $show = true, $export = true)
+    {
+        CRUD::addColumn([
+            'name' => 'email',
+            'label' => 'E-mail',
+            'type' => 'email',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
     protected function addColumnBairro($table = false, $modal = true, $show = true, $export = true)
     {
         CRUD::addColumn([
@@ -249,12 +262,180 @@ trait CommonColumns
         ]);
     }
 
+    protected function addColumnGetUnidade($table = false, $modal = true, $show = true, $export = true): void
+    {
+        CRUD::addColumn([
+            'name' => 'unidade',
+            'label' => 'Unidade',
+            'type' => 'model_function',
+            'function_name' => 'getUnidade',
+//            'limit' => 1000,
+            'orderable' => true,
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export,
+            'searchLogic' => function (Builder $query, $column, $searchTerm) {
+                $query->orWhere('unidades.codigo_unidade', 'like', "%" . strtoupper($searchTerm) . "%");
+                $query->orWhere('unidades.nome_resumido', 'like', "%" . strtoupper($searchTerm) . "%");
+                $query->orWhere('unidades.nome', 'like', "%" . strtoupper($searchTerm) . "%");
+            },
+        ]);
+
+    }
+
+    protected function addColumnGetFornecedorCnpj($table = false, $modal = true, $show = true, $export = true): void
+    {
+        CRUD::addColumn([
+            'name' => 'fornecedor_cnpj',
+            'label' => 'Fornecedor CNPJ',
+            'type' => 'model_function',
+            'function_name' => 'getFornecedorCnpj',
+//            'limit' => 1000,
+            'orderable' => true,
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export,
+            'searchLogic' => function (Builder $query, $column, $searchTerm) {
+                $query->orWhere('fornecedores.cnpj', 'like', "%" . strtoupper($searchTerm) . "%");
+            },
+        ]);
+
+    }
+
+    protected function addColumnGetFornecedorNome($table = false, $modal = true, $show = true, $export = true): void
+    {
+        CRUD::addColumn([
+            'name' => 'fornecedor_nome',
+            'label' => 'Fornecedor Nome',
+            'type' => 'model_function',
+            'function_name' => 'getFornecedorNome',
+            'limit' => 30,
+            'orderable' => true,
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export,
+            'searchLogic' => function (Builder $query, $column, $searchTerm) {
+                $query->orWhere('fornecedores.nome', 'like', "%" . strtoupper($searchTerm) . "%");
+            },
+        ]);
+
+    }
+
+    protected function addColumnGetMunicipioFornecedor($table = false, $modal = true, $show = true, $export = true): void
+    {
+        CRUD::addColumn([
+            'name' => 'municipio_fornecedor',
+            'label' => 'Município Fornecedor',
+            'type' => 'model_function',
+            'function_name' => 'getMunicipioFornecedor',
+//            'limit' => 1000,
+            'orderable' => true,
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export,
+            'searchLogic' => function (Builder $query, $column, $searchTerm) {
+                $query->orWhere('municipios.nome', 'ilike', "%" . $searchTerm . "%");
+            },
+        ]);
+
+    }
+
     protected function addColumnUpdatedAt($table = false, $modal = true, $show = true, $export = true): void
     {
         CRUD::addColumn([
             'name' => 'updated_at',
             'label' => 'Alterado em',
             'type' => 'datetime',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnDataEmissao($table = false, $modal = true, $show = true, $export = true): void
+    {
+        CRUD::addColumn([
+            'name' => 'data_emissao',
+            'label' => 'Data Emissão',
+            'type' => 'date',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnNumeroNfe($table = false, $modal = true, $show = true, $export = true): void
+    {
+        CRUD::addColumn([
+            'name' => 'numero',
+            'label' => 'Número',
+            'type' => 'text',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnNaturezaOperacaoNfe($table = false, $modal = true, $show = true, $export = true): void
+    {
+        CRUD::addColumn([
+            'name' => 'natureza_operacao',
+            'label' => 'Natureza Operação',
+            'type' => 'text',
+            'limit' => 40,
+            'escaped' => false,
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnSerieNfe($table = false, $modal = true, $show = true, $export = true): void
+    {
+        CRUD::addColumn([
+            'name' => 'serie',
+            'label' => 'Série',
+            'type' => 'text',
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnChaveAcessoNfe($table = false, $modal = true, $show = true, $export = true): void
+    {
+        CRUD::addColumn([
+            'name' => 'chave',
+            'label' => 'Chave Acesso',
+            'type' => 'text',
+            'limit' => 44,
+            'priority' => 1,
+            'visibleInTable' => $table,
+            'visibleInModal' => $modal,
+            'visibleInShow' => $show,
+            'visibleInExport' => $export
+        ]);
+    }
+
+    protected function addColumnValorNfe($table = false, $modal = true, $show = true, $export = true): void
+    {
+        CRUD::addColumn([
+            'name' => 'valor',
+            'label' => 'Valor (R$)',
+            'type' => 'number',
+//            'prefix' => 'R$',
+            'dec_point' => ',',
+            'thousands_sep' => '.',
+            'decimals' => 2,
             'visibleInTable' => $table,
             'visibleInModal' => $modal,
             'visibleInShow' => $show,
