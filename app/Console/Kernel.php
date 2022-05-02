@@ -54,8 +54,8 @@ class Kernel extends ConsoleKernel
         )
             ->timezone('America/Sao_Paulo')
             ->weekdays()
-            ->everyThreeHours();
-//            ->everyMinute();
+//            ->everyThreeHours();
+            ->everyMinute();
     }
 
 }
