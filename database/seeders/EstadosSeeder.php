@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Codigo;
-use App\Models\Codigoitem;
+use App\Models\CodigoItem;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -24,31 +24,31 @@ class EstadosSeeder extends Seeder
             'visivel' => 1
         ])->id;
 
-        $norte = Codigoitem::create([
+        $norte = CodigoItem::create([
             'codigo_id' => $codigoLista,
             'descres' => 'NORTE',
             'descricao' => 'Norte'
         ])->id;
 
-        $nordeste = Codigoitem::create([
+        $nordeste = CodigoItem::create([
             'codigo_id' => $codigoLista,
             'descres' => 'NORDESTE',
             'descricao' => 'Nordeste'
         ])->id;
 
-        $centroOeste = Codigoitem::create([
+        $centroOeste = CodigoItem::create([
             'codigo_id' => $codigoLista,
             'descres' => 'CENTRO',
             'descricao' => 'Centro-Oeste'
         ])->id;
 
-        $sudeste = Codigoitem::create([
+        $sudeste = CodigoItem::create([
             'codigo_id' => $codigoLista,
             'descres' => 'SUDESTE',
             'descricao' => 'Sudeste'
         ])->id;
 
-        $sul = Codigoitem::create([
+        $sul = CodigoItem::create([
             'codigo_id' => $codigoLista,
             'descres' => 'SUL',
             'descricao' => 'Sul'
