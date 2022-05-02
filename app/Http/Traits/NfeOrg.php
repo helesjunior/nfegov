@@ -242,7 +242,6 @@ trait NfeOrg
                     echo $e->getMessage();
                     break;
                 }
-                dump($resp);
 
                 $dom = new \DOMDocument();
                 $dom->loadXML($resp);
@@ -300,14 +299,12 @@ trait NfeOrg
                     if (isset($content_teste->chNFe)) {
                         $this->confirmaOperacaoNfePorChave($unidade, $content_teste->chNFe, '210210');
                     }
-                    dump($content);
                 }
                 if ($ultNSU == $maxNSU) {
                     break;
                 }
                 sleep(2);
             }
-            dump('Finalizado!');
             return true;
 
         } catch (Exception $e) {

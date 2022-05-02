@@ -38,6 +38,7 @@ class ConsultaNfeCrudController extends CrudController
         CRUD::addClause('join', 'unidades', 'unidades.id', '=', 'nsus.unidade_id');
         CRUD::addClause('join', 'fornecedores', 'fornecedores.id', '=', 'nfes.fornecedor_id');
         CRUD::addClause('join', 'municipios', 'municipios.id', '=', 'fornecedores.municipio_id');
+        CRUD::orderBy('nfes.updated_at', 'desc');
 
         $this->data['breadcrumbs'] = [
            "Consulta NFes" => false,
