@@ -228,7 +228,7 @@ trait NfeOrg
 
             $ultNSU = Nsu::where('unidade_id', $unidade->id)->latest()->first()->ultimo_nsu;
             $maxNSU = $ultNSU;
-            $loopLimit = ($ultNSU == 0) ? 10 : 2;
+            $loopLimit = ($ultNSU == 0) ? 20 : 10;
             $iCount = 0;
 
             while ($ultNSU <= $maxNSU) {
