@@ -9,6 +9,7 @@
 /nbproject
 /.vagrant
 Homestead.json
+auth.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
