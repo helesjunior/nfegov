@@ -228,7 +228,7 @@ trait NfeOrg
 
             $ultNSU = Nsu::where('unidade_id', $unidade->id)->latest()->first()->ultimo_nsu;
             $maxNSU = $ultNSU;
-            $loopLimit = ($ultNSU == 0) ? 20 : 10;
+            $loopLimit = ($ultNSU == 0) ? 150 : 100;
             $iCount = 0;
 
             while ($ultNSU <= $maxNSU) {
@@ -262,10 +262,6 @@ trait NfeOrg
                 $nsu = new Nsu();
                 $nsu = $nsu->inserirUltimoNsu(intval($ultNSU), $unidade, $resp);
 
-//                if($cStat == '137'){
-//                    137 - Nenhum documento localizado, a SEFAZ está te informando para consultar novamente após uma hora a contar desse momento
-//                    break;
-//                }
 
                 if (empty($lote)) {
                     continue;
