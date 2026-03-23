@@ -9,10 +9,11 @@ class TrustProxies extends Middleware
 {
     /**
      * The trusted proxies for this application.
+     * Use '*' quando atrás de proxy reverso (nginx, load balancer) que envia X-Forwarded-Proto.
      *
      * @var array|string|null
      */
-    protected $proxies;
+    protected $proxies = '*';
 
     /**
      * The headers that should be used to detect proxies.
